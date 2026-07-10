@@ -48,11 +48,6 @@ export default function App() {
     }
   }, []);
 
-  // Close sidebar when tab changes on mobile
-  useEffect(() => {
-    setIsSidebarOpen(false);
-  }, [activeTab]);
-
   // Helper to save current list to localStorage
   const saveToStorage = (updatedList: Transaction[]) => {
     setTransactions(updatedList);
@@ -96,27 +91,28 @@ export default function App() {
 
   return (
     <div id="app-root-container" className="flex h-screen w-screen bg-slate-50/50 overflow-hidden text-slate-800">
-      {/* Mobile menu button */}
+      {/* Mobile menu button - only visible on small screens */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed top-4 left-4 z-50 md:hidden p-2 bg-slate-950 text-white rounded-lg hover:bg-slate-800 transition-colors"
+        className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-slate-950 text-white rounded-lg hover:bg-slate-800 transition-colors"
+        aria-label="Toggle menu"
       >
         {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
-      {/* Mobile sidebar backdrop */}
+      {/* Mobile sidebar backdrop - only visible on small screens when open */}
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
         />
       )}
 
-      {/* Sidebar - hidden on mobile unless open */}
+      {/* Sidebar - slides out on mobile, always visible on desktop */}
       <div
         className={`
-          fixed md:static inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+          fixed lg:static inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         <Sidebar 
@@ -130,7 +126,7 @@ export default function App() {
       </div>
 
       {/* Main content body */}
-      <main id="main-content-scroll" className="flex-1 overflow-y-auto h-screen px-4 md:px-8 py-10 md:py-10 pt-16 md:pt-10">
+      <main id="main-content-scroll" className="flex-1 overflow-y-auto h-screen px-4 lg:px-8 py-10 lg:py-10 pt-16 lg:pt-10">
         <div className="max-w-6xl mx-auto">
           {activeTab === 'dashboard' && (
             <DashboardView 
