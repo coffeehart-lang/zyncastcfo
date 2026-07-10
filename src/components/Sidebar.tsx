@@ -72,7 +72,7 @@ export default function Sidebar({
             </span>
             <button
               onClick={onOpenCheckout}
-              className="w-full py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all duration-200 cursor-pointer text-center block shadow-sm flex items-center justify-center gap-1"
+              className="w-full py-1.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all duration-200 flex items-center justify-center gap-1"
             >
               <Zap className="w-2.5 h-2.5 fill-current" /> Upgrade to PRO
             </button>
