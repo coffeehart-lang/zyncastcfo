@@ -99,7 +99,7 @@ export default function App() {
       {/* Mobile menu button */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed top-4 left-4 z-50 md:hidden p-2 bg-slate-950 text-white rounded-lg"
+        className="fixed top-4 left-4 z-50 md:hidden p-2 bg-slate-950 text-white rounded-lg hover:bg-slate-800 transition-colors"
       >
         {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
