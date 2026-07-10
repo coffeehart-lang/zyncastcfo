@@ -8,6 +8,7 @@ import ForecastView from './components/ForecastView';
 import TaxEstimatorView from './components/TaxEstimatorView';
 import AIAdvisorView from './components/AIAdvisorView';
 import CheckoutModal from './components/CheckoutModal';
+import { Menu, X } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -20,6 +21,7 @@ export default function App() {
     return (localStorage.getItem('zyncast_cfo_user_tier') as 'free' | 'pro') || 'free';
   });
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
   useEffect(() => {
     localStorage.setItem('zyncast_cfo_privacy_mode', isPrivacyMode ? 'true' : 'false');
@@ -45,6 +47,11 @@ export default function App() {
       localStorage.setItem('zyncast_cfo_transactions', JSON.stringify(INITIAL_TRANSACTIONS));
     }
   }, []);
+
+  // Close sidebar when tab changes on mobile
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [activeTab]);
 
   // Helper to save current list to localStorage
   const saveToStorage = (updatedList: Transaction[]) => {
@@ -89,18 +96,41 @@ export default function App() {
 
   return (
     <div id="app-root-container" className="flex h-screen w-screen bg-slate-50/50 overflow-hidden text-slate-800">
-      {/* Sidebar navigation */}
-      <Sidebar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        isPrivacyMode={isPrivacyMode} 
-        setIsPrivacyMode={setIsPrivacyMode} 
-        userTier={userTier}
-        onOpenCheckout={() => setIsCheckoutOpen(true)}
-      />
+      {/* Mobile menu button */}
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="fixed top-4 left-4 z-50 md:hidden p-2 bg-slate-950 text-white rounded-lg"
+      >
+        {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+      </button>
+
+      {/* Mobile sidebar backdrop */}
+      {isSidebarOpen && (
+        <div
+          onClick={() => setIsSidebarOpen(false)}
+          className="fixed inset-0 z-30 bg-black/50 md:hidden"
+        />
+      )}
+
+      {/* Sidebar - hidden on mobile unless open */}
+      <div
+        className={`
+          fixed md:static inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        `}
+      >
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          isPrivacyMode={isPrivacyMode} 
+          setIsPrivacyMode={setIsPrivacyMode} 
+          userTier={userTier}
+          onOpenCheckout={() => setIsCheckoutOpen(true)}
+        />
+      </div>
 
       {/* Main content body */}
-      <main id="main-content-scroll" className="flex-1 overflow-y-auto h-screen px-8 py-10 md:px-12">
+      <main id="main-content-scroll" className="flex-1 overflow-y-auto h-screen px-4 md:px-8 py-10 md:py-10 pt-16 md:pt-10">
         <div className="max-w-6xl mx-auto">
           {activeTab === 'dashboard' && (
             <DashboardView 
