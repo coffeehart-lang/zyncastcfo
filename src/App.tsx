@@ -91,30 +91,44 @@ export default function App() {
 
   return (
     <div id="app-root-container" className="flex h-screen w-screen bg-slate-50/50 overflow-hidden text-slate-800">
-      {/* Mobile menu button - only visible on small screens */}
-      <button
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 bg-slate-950 text-white rounded-lg hover:bg-slate-800 transition-colors"
-        aria-label="Toggle menu"
-      >
-        {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
+      {/* Mobile menu button - ONLY visible below 1024px (lg breakpoint) */}
+      <div className="lg:hidden">
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="fixed top-4 left-4 z-50 p-2 bg-slate-950 text-white rounded-lg hover:bg-slate-800 transition-colors"
+          aria-label="Toggle menu"
+        >
+          {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </button>
 
-      {/* Mobile sidebar backdrop - only visible on small screens when open */}
-      {isSidebarOpen && (
+        {/* Mobile sidebar backdrop */}
+        {isSidebarOpen && (
+          <div
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 z-30 bg-black/50"
+          />
+        )}
+
+        {/* Mobile sidebar - slides in from left */}
         <div
-          onClick={() => setIsSidebarOpen(false)}
-          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
-        />
-      )}
+          className={`
+            fixed inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out
+            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          `}
+        >
+          <Sidebar 
+            activeTab={activeTab} 
+            setActiveTab={setActiveTab} 
+            isPrivacyMode={isPrivacyMode} 
+            setIsPrivacyMode={setIsPrivacyMode} 
+            userTier={userTier}
+            onOpenCheckout={() => setIsCheckoutOpen(true)}
+          />
+        </div>
+      </div>
 
-      {/* Sidebar - slides out on mobile, always visible on desktop */}
-      <div
-        className={`
-          fixed lg:static inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        `}
-      >
+      {/* Desktop sidebar - ONLY visible at 1024px and above */}
+      <div className="hidden lg:block">
         <Sidebar 
           activeTab={activeTab} 
           setActiveTab={setActiveTab} 
@@ -126,7 +140,7 @@ export default function App() {
       </div>
 
       {/* Main content body */}
-      <main id="main-content-scroll" className="flex-1 overflow-y-auto h-screen px-4 lg:px-8 py-10 lg:py-10 pt-16 lg:pt-10">
+      <main id="main-content-scroll" className="flex-1 overflow-y-auto h-screen px-4 lg:px-8 py-10 pt-16 lg:pt-10">
         <div className="max-w-6xl mx-auto">
           {activeTab === 'dashboard' && (
             <DashboardView 
